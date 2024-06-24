@@ -24,16 +24,26 @@ class Tree {
     return root;
   }
 
+  find(value, root = this.root) {
+    if (root.data === value || root.data === null) {
+      return root;
+    }
+    if (value > root.data) {
+      return this.find(value, root.right);
+    } else {
+      return this.find(value, root.left);
+    }
+  }
+
   insert(value, root = this.root) {
-    if(root === null) {
+    if (root === null) {
       root = new Node(value);
       return root;
     }
 
-    if(value > root.data) {
+    if (value > root.data) {
       root.right = this.insert(value, root.right);
-    }
-    else {
+    } else {
       root.left = this.insert(value, root.left);
     }
 
@@ -94,5 +104,6 @@ class Tree {
 let sortedArray = [10, 20, 30, 40, 50, 60, 70, 80, 90];
 let tree = new Tree(sortedArray);
 
-tree.insert(120);
+tree.buildTree(sortedArray);
 tree.prettyPrint();
+console.log(tree.find(90));
