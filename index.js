@@ -45,6 +45,45 @@ class Tree {
     return arrOfTree;
   }
 
+  inorder(root = this.root, bst = "") {
+    if (root == null) {
+      return bst;
+    }
+
+    bst = this.inorder(root.left, bst);
+
+    bst = bst + root.data + " ";
+
+    bst = this.inorder(root.right, bst);
+
+    return bst;
+  }
+
+  preorder(root = this.root, bst = "") {
+    if (root == null) {
+      return bst;
+    }
+
+    bst = bst + root.data + " ";
+
+    bst = this.preorder(root.left, bst);
+
+    bst = this.preorder(root.right, bst);
+
+    return bst;
+  }
+
+  postorder(root = this.root, bst = "") {
+    if (root == null) {
+      return bst;
+    }
+
+    bst = this.postorder(root.left, bst);
+    bst = this.postorder(root.right, bst);
+    bst = bst + root.data + " ";
+    return bst;
+  }
+
   find(value, root = this.root) {
     if (root.data === value || root.data === null) {
       return root;
@@ -69,8 +108,38 @@ class Tree {
     }
   }
 
-  isBalanced(root = this.root) {
+  inorderArray(root = this.root, arr = []) {
+    if (root == null) {
+      return arr;
+    }
+    this.inorderArray(root.left, arr);
+    arr.push(root.data);
+    this.inorderArray(root.right, arr);
+    return arr;
+  }
 
+  rebalance(root = this.root) {
+    let arr = this.inorderArray(root, []);
+    return this.root = this.buildTree(arr);
+  }
+
+  isBalanced(root = this.root) {
+    if (root == null) {
+      return true;
+    }
+
+    let lh = this.height(root.left);
+    let rh = this.height(root.right);
+
+    if (
+      Math.abs(lh - rh) <= 1 &&
+      this.isBalanced(root.left) === true &&
+      this.isBalanced(root.right) === true
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   insert(value, root = this.root) {
@@ -122,8 +191,9 @@ class Tree {
     return node;
   }
 
-  height(treeHeight = this.levelOrder()) {
-    return treeHeight.length;
+  height(root = this.root) {
+    if (root == null) return 0;
+    return Math.max(this.height(root.left), this.height(root.right)) + 1;
   }
 
   prettyPrint() {
@@ -143,9 +213,4 @@ class Tree {
   }
 }
 
-let sortedArray = [10, 20, 30, 40, 50, 70, 80, 90];
-let tree = new Tree(sortedArray);
-
-tree.buildTree(sortedArray);
-tree.levelOrder();
-tree.depth(90);
+export default Tree;
