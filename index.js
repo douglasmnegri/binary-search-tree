@@ -24,6 +24,27 @@ class Tree {
     return root;
   }
 
+  levelOrder(root = this.root, arrOfTree = [], queue = [root]) {
+    if (root == null) {
+      return [];
+    }
+
+    while (queue.length != 0) {
+      let level = [];
+      let n = queue.length;
+      for (let i = 0; i < n; i++) {
+        let node = queue.pop();
+        level.push(node.data);
+
+        if (node.left) queue.unshift(node.left);
+        if (node.right) queue.unshift(node.right);
+      }
+      arrOfTree.push(level);
+    }
+
+    return arrOfTree;
+  }
+
   find(value, root = this.root) {
     if (root.data === value || root.data === null) {
       return root;
@@ -33,6 +54,23 @@ class Tree {
     } else {
       return this.find(value, root.left);
     }
+  }
+
+  depth(value, root = this.root, indexOfRoot = 1) {
+    if (root.data === value) {
+      console.log(indexOfRoot);
+      return indexOfRoot;
+    }
+
+    if (value > root.data) {
+      return this.depth(value, root.right, (indexOfRoot = indexOfRoot + 1));
+    } else {
+      return this.depth(value, root.left, (indexOfRoot = indexOfRoot + 1));
+    }
+  }
+
+  isBalanced(root = this.root) {
+
   }
 
   insert(value, root = this.root) {
@@ -84,6 +122,10 @@ class Tree {
     return node;
   }
 
+  height(treeHeight = this.levelOrder()) {
+    return treeHeight.length;
+  }
+
   prettyPrint() {
     const prettyPrint = (node, prefix = "", isLeft = true) => {
       if (node === null) {
@@ -101,9 +143,9 @@ class Tree {
   }
 }
 
-let sortedArray = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+let sortedArray = [10, 20, 30, 40, 50, 70, 80, 90];
 let tree = new Tree(sortedArray);
 
 tree.buildTree(sortedArray);
-tree.prettyPrint();
-console.log(tree.find(90));
+tree.levelOrder();
+tree.depth(90);
